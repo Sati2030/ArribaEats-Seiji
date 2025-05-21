@@ -1,0 +1,14 @@
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.GeneratedMSBuildEditorConfig.editorconfig
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.AssemblyInfoInputs.cache
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.AssemblyInfo.cs
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.csproj.CoreCompileInputs.cache
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/bin/Debug/net9.0/ArribaEats
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/bin/Debug/net9.0/ArribaEats.deps.json
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/bin/Debug/net9.0/ArribaEats.runtimeconfig.json
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/bin/Debug/net9.0/ArribaEats.dll
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/bin/Debug/net9.0/ArribaEats.pdb
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.dll
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/refint/ArribaEats.dll
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.pdb
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.genruntimeconfig.cache
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ref/ArribaEats.dll
