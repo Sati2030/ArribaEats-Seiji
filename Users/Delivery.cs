@@ -4,9 +4,11 @@ namespace ArribaEats
 {
     public class Delivery : User
     {
+
+        public Order? OrderAssigned { get; set; }
         public string Licenceplate { get; private set; }
 
-        public Delivery(string name, int age, string email, string mobile, string password,string type) : base(name, age, email, mobile, password,type) { }
+        public Delivery(string name, int age, string email, string mobile, string password, string type) : base(name, age, email, mobile, password, type) { }
 
         public void LicenceSetter(string licence)
         {

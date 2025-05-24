@@ -1,18 +1,20 @@
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace ArribaEats.Registrations
+namespace ArribaEats
 {
     public class DeliveryRegistration : Registrations
     {
 
         public override void Registration(string name, int age, string email, string mobile, string password)
         {
-            Delivery user = new Delivery(name, age, email, mobile, password,"Delivery");
+            Delivery delivery = new Delivery(name, age, email, mobile, password,"Delivery");
             string licence = LicenceParser();
-            user.LicenceSetter(licence);
+            delivery.LicenceSetter(licence);
 
-            Console.WriteLine($"You have been successfuly registered as a deliverer, {name}");
+            User = delivery;
+
+            Console.WriteLine($"You have been successfully registered as a deliverer, {name}!");
             return;
         }
 
@@ -27,18 +29,15 @@ namespace ArribaEats.Registrations
                 {
                     if (!Regex.IsMatch(input, @"^(?!\s*$)[A-Z0-9 ]{1,8}$"))
                     {
-                        throw new InvalidInputException("Invalid plate number.");
+                        throw new InvalidInputException("Invalid licence plate.");
                     }
 
                     return input;
                 }
                 catch (Exception e)
                 {
-
+                    Console.WriteLine(e.Message);
                 }
-
-
-
 
             }
         }

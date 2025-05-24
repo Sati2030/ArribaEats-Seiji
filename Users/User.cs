@@ -13,7 +13,7 @@ namespace ArribaEats
         public string Email { get; private set; }
         public string Mobile { get; private set; }
         public string Password { get; private set; }
-        public Location? Location { get; private set; }
+        public Location? Location { get; set; }
 
         public User(string name, int age, string email, string mobile, string Password, string type)
         {
@@ -23,11 +23,6 @@ namespace ArribaEats
             this.Mobile = mobile;
             this.Password = Password;
             this.Type = type;
-        }
-
-        public void LocationSetter(Location location)
-        {
-            this.Location = location;
         }
 
     }

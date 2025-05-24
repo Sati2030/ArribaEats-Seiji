@@ -7,8 +7,9 @@ namespace ArribaEats
     {
         public abstract MenuBase? Show();
 
-        protected bool InputParser(string? input, int range, out int choice)
+        protected bool InputParser(int range, out int choice)
         {
+            string input = Console.ReadLine();
             try
             {
                 choice = int.Parse(input);
@@ -20,7 +21,7 @@ namespace ArribaEats
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Invalid input");
                 choice = -1;
                 return false;
             }

@@ -1,25 +1,26 @@
 using Arribaeats;
 using System.Text.RegularExpressions;
 
-namespace ArribaEats.Registrations
+namespace ArribaEats
 {
     public class ClientRegistration : Registrations
     {
 
         public override void Registration(string name, int age, string email, string mobile, string password)
         {
-            Client user = new Client(name, age, email, mobile, password,"Client");
+            Client client = new Client(name, age, email, mobile, password,"Client");
 
             string restaurantname = RestNameParser();
             string type = RestTypeParser();
-            Location location = LocationParser();
+            Location location = LocationParser.Parse();
 
             Restaurant restaurant = new Restaurant(restaurantname, type, location);
             RestaurantStore.Restaurants.Add(restaurant);
 
-            user.RestaurantSetter(restaurant);
+            client.RestaurantSetter(restaurant);
+            User = client;
 
-            Console.WriteLine($"You have successfully registered as a client, {name}");
+            Console.WriteLine($"You have been successfully registered as a client, {name}!");
             return;
 
         }
@@ -28,12 +29,12 @@ namespace ArribaEats.Registrations
         {
             while (true)
             {
-                Console.WriteLine("Please enter your restaurant's name");
+                Console.WriteLine("Please enter your restaurant's name:");
                 string input = Console.ReadLine();
 
                 try
                 {
-                    if (!Regex.IsMatch(input, @".*\S*"))
+                    if (!Regex.IsMatch(input, @"\S"))
                     {
                         throw new InvalidInputException("Invalid restaurant name.");
                     }
@@ -61,10 +62,9 @@ namespace ArribaEats.Registrations
                 Console.WriteLine("6: Australian");
                 Console.WriteLine("Please enter a choice between 1 and 6:");
 
-                string input = Console.ReadLine();
                 int choice;
 
-                if (InputParser(input, 6, out choice))
+                if (InputParser(6, out choice))
                 {
                     return choice switch
                     {

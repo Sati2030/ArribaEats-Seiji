@@ -12,3 +12,4 @@
 /Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.pdb
 /Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.genruntimeconfig.cache
 /Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ref/ArribaEats.dll
+/Users/seijisato/Documents/QUT/CAB201/Assignment2/ArribaEats/obj/Debug/net9.0/ArribaEats.sourcelink.json

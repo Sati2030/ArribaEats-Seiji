@@ -4,12 +4,17 @@ namespace ArribaEats {
 
     public static class UserStore
     {
-        public static List<User> Users { get; } = new List<User>();
+        public static List<User> Users { get; set; } = new List<User>();
     }
 
     public static class RestaurantStore
     {
         public static List<Restaurant> Restaurants { get; } = new List<Restaurant>();
+    }
+
+    public static class OrderStore
+    {
+        public static List<Order> Orders { get; } = new List<Order>();
     }
 
 

@@ -3,11 +3,11 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
 
-namespace ArribaEats.Registrations
+namespace ArribaEats
 {
     public abstract class Registrations : MenuBase
     {
-        protected User user;
+        public User User { get; set; }
 
         public override MenuBase? Show()
         {
@@ -20,7 +20,7 @@ namespace ArribaEats.Registrations
 
             Registration(name,age,email,mobile,password);
 
-            UserStore.Users.Add(user);
+            UserStore.Users.Add(User);
 
             return new MainMenu();
         }
@@ -53,7 +53,7 @@ namespace ArribaEats.Registrations
         {
             while (true)
             {
-                Console.WriteLine("Please enter your age (18-100)");
+                Console.WriteLine("Please enter your age (18-100):");
                 string input = Console.ReadLine();
 
                 try
@@ -61,7 +61,7 @@ namespace ArribaEats.Registrations
                     int age = int.Parse(input);
                     if (age < 18 || age > 100)
                     {
-                        throw new InvalidInputException("Invalid age");
+                        throw new InvalidInputException("Invalid age.");
                     }
 
                     return age;
@@ -69,7 +69,7 @@ namespace ArribaEats.Registrations
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Invalid age.");
                 }
             }
         }
@@ -78,21 +78,21 @@ namespace ArribaEats.Registrations
         {
             while (true)
             {
-                Console.WriteLine("Please enter your email address");
+                Console.WriteLine("Please enter your email address:");
                 string input = Console.ReadLine();
 
                 try
                 {
                     if (!Regex.IsMatch(input, @"^[A-Za-z0-9.]+@[A-Za-z0-9.]+$"))
                     {
-                        throw new InvalidInputException("Invalid email.");
+                        throw new InvalidInputException("Invalid email address.");
                     }
 
                     foreach (User u in UserStore.Users)
                     {
                         if (u.Email == input)
                         {
-                            throw new InvalidInputException("Invalid email.");
+                            throw new InvalidInputException("This email address is already in use.");
                         }
                     }
 
@@ -116,7 +116,7 @@ namespace ArribaEats.Registrations
 
                 try
                 {
-                    if (!Regex.IsMatch(input,@"^\d{10}$"))
+                    if (!Regex.IsMatch(input,@"^0\d{9}$"))
                     {
                         throw new InvalidInputException("Invalid phone number.");
                     }
@@ -139,8 +139,8 @@ namespace ArribaEats.Registrations
                 Console.WriteLine("- be at least 8 characters long");
                 Console.WriteLine("- contain a number");
                 Console.WriteLine("- contain a lowercase letter");
-                Console.WriteLine("- contain an upper case letter");
-                Console.WriteLine("Please enter a password");
+                Console.WriteLine("- contain an uppercase letter");
+                Console.WriteLine("Please enter a password:");
 
                 string input = Console.ReadLine();
 
@@ -148,7 +148,7 @@ namespace ArribaEats.Registrations
                 {
                     if (!Regex.IsMatch(input, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"))
                     {
-                        throw new InvalidInputException("Invalid password");
+                        throw new InvalidInputException("Invalid password.");
                     }
 
                     Console.WriteLine("Please confirm your password:");
@@ -169,36 +169,6 @@ namespace ArribaEats.Registrations
                 }
             }
 
-        }
-
-        public Location LocationParser()
-        {
-            while (true)
-            {
-                Console.WriteLine("Please enter your location (in the form X,Y)");
-                string input = Console.ReadLine();
-                string[] values = input.Split(",");
-
-                try
-                {
-                    if (values.Length != 2)
-                    {
-                        throw new InvalidInputException("Invalid location");
-                    }
-
-                    int x = int.Parse(values[0]);
-                    int y = int.Parse(values[1]);
-
-                    return new Location(x, y);
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-
-
-            }
         }
 
         public abstract void Registration(string name, int age, string email, string mobile, string password);
