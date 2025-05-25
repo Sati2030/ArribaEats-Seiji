@@ -7,11 +7,11 @@ namespace ArribaEats
     public class CustomerMainMenu : MenuBase
     {
 
-        public Customer Customer { get; }
+        private Customer customer;
 
         public CustomerMainMenu(Customer customer)
         {
-            this.Customer = customer;
+            this.customer = customer;
         }
 
         public override MenuBase? Show()
@@ -36,13 +36,13 @@ namespace ArribaEats
                 switch (choice)
                 {
                     case 1:
-                        return new CustomerDisplayer(Customer);
+                        return new CustomerDisplayer(customer);
                     case 2:
-                        return new SelectRestaurantMenu(Customer);
+                        return new SelectRestaurantMenu(customer);
                     case 3:
-                        return new OrderStatusMenu(Customer);
+                        return new OrderStatusMenu(customer);
                     case 4:
-                        return new RateRestaurantMenu(Customer);
+                        return new RateRestaurantMenu(customer);
                     case 5:
                         Console.WriteLine("You are now logged out.");
                         return new MainMenu();
@@ -101,8 +101,8 @@ namespace ArribaEats
             {
                 1 => SortRestaurant(r => r.Name),
                 2 => SortRestaurant(r => r.Location.CalculateDistance(customer.Location)),
-                3 => SortRestaurant(r => r.TypeMapper()),
-                4 => SortRestaurant(r => r.Rating),
+                3 => SortRestaurant(r => r.Cuisine.Id),
+                4 => SortRestaurant(r => -r.Rating),
                 5 => new CustomerMainMenu(customer)
             };
 
@@ -112,7 +112,7 @@ namespace ArribaEats
         public MenuBase SortRestaurant<T>(Func<Restaurant, T> selector)
             where T : IComparable<T>
         {
-            List<Restaurant> sorted = restaurants.OrderBy(selector).ToList();
+            List<Restaurant> sorted = restaurants.OrderBy(selector).ThenBy(r => r.Name).ToList();
             int maxNum = sorted.Count + 1;
 
             Console.WriteLine("You can order from the following restaurants:");
@@ -124,7 +124,7 @@ namespace ArribaEats
                 PrintEntry(sorted[i], i + 1);
             }
             Console.WriteLine($"{maxNum}: Return to the previous menu");
-            Console.WriteLine("Please enter a choice between 1 and 2:");
+            Console.WriteLine($"Please enter a choice between 1 and {maxNum}:");
 
             int choice;
 
@@ -138,8 +138,8 @@ namespace ArribaEats
                 return new CustomerMainMenu(customer);
             }
 
-            Console.WriteLine($"Placing order from {restaurants[choice - 1].Name}.");
-            return new RestaurantMainMenu(restaurants[choice - 1], customer);
+            Console.WriteLine($"Placing order from {sorted[choice - 1].Name}.");
+            return new RestaurantMainMenu(sorted[choice - 1], customer);
 
 
         }
@@ -154,56 +154,61 @@ namespace ArribaEats
             }
             else
             {
-                rating = $"{restaurant.Rating}:F1";
+                rating = $"{restaurant.Rating:F1}";
             }
 
-            Console.WriteLine("{0,-3}{1,-22}{2,-7}{3,-6}{4,-12}{5,-3}", $"{num}:", $"{restaurant.Name}", $"{restaurant.Location.GetLocation()}", $"{restaurant.Location.CalculateDistance(customer.Location)}", $"{restaurant.Type}", $"{rating}");
+            Console.WriteLine("{0,-3}{1,-22}{2,-7}{3,-6}{4,-12}{5,-3}",
+                num + ":",
+                restaurant.Name,
+                restaurant.Location.GetLocation(),
+                restaurant.Location.CalculateDistance(customer.Location),
+                restaurant.Cuisine.Name,
+                rating);
         }
-
     }
 
     public class OrderStatusMenu : MenuBase
-    {
-
-        public Customer customer;
-
-        public OrderStatusMenu(Customer customer)
-        {
-            this.customer = customer;
-        }
-
-
-        public override MenuBase? Show()
         {
 
-            if (customer.Orders.Count == 0)
+            public Customer customer;
+
+            public OrderStatusMenu(Customer customer)
             {
-                Console.WriteLine("You have not placed any orders.");
+                this.customer = customer;
             }
-            else
+
+
+            public override MenuBase? Show()
             {
-                foreach (Order o in customer.Orders)
+
+                if (customer.Orders.Count == 0)
                 {
-                    Console.WriteLine($"Order #{o.ID} from {o.Restaurant.Name}: {o.GetStatus()}");
-                    if (o.GetStatus() == "Delivered")
-                    {
-                        Console.WriteLine($"This order was delivered by {o.Delivery.Name} (licence plate: {o.Delivery.Licenceplate})");
-                    }
-                    foreach (OrderItem oi in o.Items)
-                    {
-                        Console.WriteLine($"{oi.Quantity} x {oi.Plate.Name}");
-                    }
-
-                    Console.WriteLine();
-
+                    Console.WriteLine("You have not placed any orders.");
                 }
+                else
+                {
+                    foreach (Order o in customer.Orders)
+                    {
+                        Console.WriteLine($"Order #{o.ID} from {o.Restaurant.Name}: {o.GetStatus()}");
+                        if (o.GetStatus() == "Delivered")
+                        {
+                            Console.WriteLine($"This order was delivered by {o.Delivery.Name} (licence plate: {o.Delivery.Licenceplate})");
+                        }
+                        foreach (OrderItem oi in o.Items)
+                        {
+                            Console.WriteLine($"{oi.Quantity} x {oi.Plate.Name}");
+                        }
+
+                        Console.WriteLine();
+
+                    }
+                }
+
+                return new CustomerMainMenu(customer);
+
             }
 
-            return new CustomerMainMenu(customer);
-
         }
-
-    }
 
 
     public class RateRestaurantMenu : MenuBase
@@ -240,9 +245,9 @@ namespace ArribaEats
                 Console.WriteLine($"You are rating order #{chosen.ID} from {chosen.Restaurant.Name}:");
                 foreach (OrderItem oi in chosen.Items)
                 {
-                    Console.WriteLine($"{oi.Quantity} X {oi.Plate.Name}");
+                    Console.WriteLine($"{oi.Quantity} x {oi.Plate.Name}");
                 }
-                Console.WriteLine("Please enter a rating for this restaurant (1-5), 0 to cancel):");
+                Console.WriteLine("Please enter a rating for this restaurant (1-5, 0 to cancel):");
                 string input = Console.ReadLine();
 
                 try
@@ -262,7 +267,8 @@ namespace ArribaEats
                         string comment = Console.ReadLine();
                         Review review = new Review(customer, rating, comment);
                         chosen.Restaurant.Reviews.Add(review);
-                        Console.WriteLine($"Thank you for rating {chosen.Restaurant.Name}");
+                        customer.Orders.Remove(chosen);
+                        Console.WriteLine($"Thank you for rating {chosen.Restaurant.Name}.");
                     }
 
                 }

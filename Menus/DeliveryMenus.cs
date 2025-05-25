@@ -63,8 +63,8 @@ namespace ArribaEats
             if (delivery.OrderAssigned != null)
             {
                 Console.WriteLine("Current delivery:");
-                Console.WriteLine($"Order {delivery.OrderAssigned.ID} from {delivery.OrderAssigned.Restaurant.Name} at {delivery.OrderAssigned.Restaurant.Location.GetLocation()}");
-                Console.WriteLine($"To be delivered to {delivery.OrderAssigned.Customer.Name} at {delivery.OrderAssigned.Customer.Location.GetLocation()}");
+                Console.WriteLine($"Order #{delivery.OrderAssigned.ID} from {delivery.OrderAssigned.Restaurant.Name} at {delivery.OrderAssigned.Restaurant.Location.GetLocation()}.");
+                Console.WriteLine($"To be delivered to {delivery.OrderAssigned.Customer.Name} at {delivery.OrderAssigned.Customer.Location.GetLocation()}.");
 
             }
 
@@ -106,16 +106,16 @@ namespace ArribaEats
                     Restaurant r = available[i].Restaurant;
                     Customer c = available[i].Customer;
 
-                    Console.WriteLine("{0,3}:{1,7}{2,21}{3,7}{4,16}{5,7}{6,34}",
-                    $"{i + 1}", $"{i + 1}",
+                    Console.WriteLine("{0,-3}{1,-7}{2,-22}{3,-7}{4,-17 }{5,-7}{6}",
+                    $"{i + 1}:", $"{available[i].ID}",
                     $"{r.Name}",
                     $"{r.Location.GetLocation()}",
                     $"{c.Name}",
                     $"{c.Location.GetLocation()}",
-                    $"{delivery.Location.CalculateDistance(r.Location)}");
+                    $"{delivery.Location.CalculateDistance(r.Location) + r.Location.CalculateDistance(c.Location)}");
                 }
                 Console.WriteLine($"{maxNum + 1}: Return to the previous menu");
-                Console.WriteLine("Please enter a chioce between 1 and N:");
+                Console.WriteLine($"Please enter a choice between 1 and {maxNum + 1}:");
 
                 int choice;
 
@@ -128,8 +128,9 @@ namespace ArribaEats
                 {
                     Order chosen = available[choice - 1];
                     delivery.OrderAssigned = chosen;
+                    chosen.Delivery = delivery;
                     chosen.Available = false;
-                    Console.WriteLine($"THanks for accepting the order. Please head to {chosen.Restaurant.Name} at {chosen.Restaurant.Location.GetLocation()} to pick it up.");
+                    Console.WriteLine($"Thanks for accepting the order. Please head to {chosen.Restaurant.Name} at {chosen.Restaurant.Location.GetLocation()} to pick it up.");
                 }
 
             }
@@ -170,14 +171,15 @@ namespace ArribaEats
             else
             {
 
-                Console.WriteLine($"Thanks. We have informed {assigned.Restaurant.Name} that you have arrived and are ready to pick up order #{assigned.ID}. Please show the staff this screen as confirmation.");
+                Console.WriteLine($"Thanks. We have informed {assigned.Restaurant.Name} that you have arrived and are ready to pick up order #{assigned.ID}.");
+                Console.WriteLine("Please show the staff this screen as confirmation.");
 
                 if (assigned.GetStatus() == "Ordered" || assigned.GetStatus() == "Cooking")
                 {
                     Console.WriteLine("The order is still being prepared, so please wait patiently until it is ready.");
                 }
 
-                Console.WriteLine($"When you have the order, please deliver it to {assigned.Customer.Name} at {assigned.Customer.Location.GetLocation()}");
+                Console.WriteLine($"When you have the order, please deliver it to {assigned.Customer.Name} at {assigned.Customer.Location.GetLocation()}.");
 
                 assigned.ReadyToCollect = true;
 

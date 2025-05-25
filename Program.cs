@@ -1,10 +1,13 @@
-﻿
-namespace ArribaEats {
+﻿using System;
+using System.IO;
+
+namespace ArribaEats
+{
 
 
     public static class UserStore
     {
-        public static List<User> Users { get; set; } = new List<User>();
+        public static List<User> Users { get; } = new List<User>();
     }
 
     public static class RestaurantStore

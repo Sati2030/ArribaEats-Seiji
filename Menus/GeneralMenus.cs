@@ -22,7 +22,7 @@ namespace ArribaEats
 
             if (!InputParser(3, out choice))
             {
-                return this;
+                Show();
             }
 
             return choice switch
@@ -50,7 +50,7 @@ namespace ArribaEats
 
             if (!this.InputParser(4, out choice))
             {
-                return this;
+                Show();
             }
 
             return choice switch

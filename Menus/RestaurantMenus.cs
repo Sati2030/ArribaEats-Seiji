@@ -42,7 +42,7 @@ namespace ArribaEats
     {
 
         public Restaurant restaurant;
-        public List<Plate> menu;
+        public Carte menu;
         public Customer customer;
 
         public Order order;
@@ -59,27 +59,30 @@ namespace ArribaEats
         {
             while (true)
             {
+                List<Plate> carte = menu.Plates;
+                int numPlates = carte.Count;
+
                 Console.WriteLine($"Current order total: {order.Price:C2}");
-                for (int i = 0; i < menu.Count; i++)
+                for (int i = 0; i < numPlates; i++)
                 {
-                    Console.WriteLine("{0,-4}{1,6}  {2}", $"{i + 1}:", $"{menu[i].Price:C2}", $"{menu[i].Name}");
+                    Console.WriteLine("{0,-4}{1,6}  {2}", $"{i + 1}:", $"{carte[i].Price:C2}", $"{carte[i].Name}");
                 }
-                Console.WriteLine($"{menu.Count + 1}: Complete order");
-                Console.WriteLine($"{menu.Count + 2}: Cancel order");
-                Console.WriteLine($"Please enter a choice between 1 and {menu.Count + 2}:");
+                Console.WriteLine($"{numPlates + 1}: Complete order");
+                Console.WriteLine($"{numPlates + 2}: Cancel order");
+                Console.WriteLine($"Please enter a choice between 1 and {carte.Count + 2}:");
 
                 int choice;
 
-                if (!InputParser(menu.Count + 2, out choice))
+                if (!InputParser(numPlates + 2, out choice))
                 {
                     continue;
                 }
 
-                if (choice >= 1 && choice <= menu.Count)
+                if (choice >= 1 && choice <= numPlates)
                 {
-                    AddToOrder(menu[choice - 1]);
+                    AddToOrder(carte[choice - 1]);
                 }
-                else if (choice == menu.Count + 1)
+                else if (choice == numPlates + 1)
                 {
                     order.SetStatus("Ordered");
                     OrderStore.Orders.Add(order);
@@ -91,7 +94,7 @@ namespace ArribaEats
                     break;
 
                 }
-                else if (choice == menu.Count + 2)
+                else if (choice == numPlates + 2)
                 {
                     return new RestaurantMainMenu(restaurant, customer);
                 }

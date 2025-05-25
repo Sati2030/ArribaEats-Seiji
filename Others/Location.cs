@@ -54,7 +54,7 @@ namespace ArribaEats
 
         public int CalculateDistance(Location location)
         {
-            return Math.Abs(this.X - location.X) + Math.Abs(this.Y - location.Y);
+            return Math.Abs(location.X - this.X) + Math.Abs(location.Y - this.Y);
         }
 
     }

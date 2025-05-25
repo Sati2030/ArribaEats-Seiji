@@ -78,7 +78,7 @@ namespace ArribaEats
             Client client = (Client)User;
 
             Console.WriteLine($"Restaurant name: {client.Restaurant.Name}");
-            Console.WriteLine($"Restaurant style: {client.Restaurant.Type}");
+            Console.WriteLine($"Restaurant style: {client.Restaurant.Cuisine.Name}");
             Console.WriteLine($"Restaurant location: {client.Restaurant.Location.GetLocation()}");
 
             return new ClientMainMenu(client);
@@ -103,7 +103,7 @@ namespace ArribaEats
         {
             Console.WriteLine("This is your restaurant's current menu:");
 
-            foreach (Plate p in client.Restaurant.Menu)
+            foreach (Plate p in client.Restaurant.Menu.Plates)
             {
                 Console.WriteLine($"{p.Price,7:C2}  {p.Name}");
             }
@@ -131,7 +131,7 @@ namespace ArribaEats
                     double price = double.Parse(p);
                     Plate plate = new Plate(name, price);
 
-                    client.Restaurant.AddToMenu(plate);
+                    client.Restaurant.Menu.AddtoMenu(plate);
                     Console.WriteLine($"Successfully added {name} ({price:C2}) to menu.");
                     return new ClientMainMenu(client);
 
@@ -169,7 +169,7 @@ namespace ArribaEats
             {
                 foreach (Order o in restaurant.Orders)
                 {
-                    Console.WriteLine($"Order {o.ID} for {o.Customer.Name}: {o.GetStatus()}");
+                    Console.WriteLine($"Order #{o.ID} for {o.Customer.Name}: {o.GetStatus()}");
                     foreach (OrderItem oi in o.Items)
                     {
                         Console.WriteLine($"{oi.Quantity} x {oi.Plate.Name}");
@@ -200,15 +200,17 @@ namespace ArribaEats
 
         public override MenuBase? Show()
         {
-            int maxNum = restaurant.Orders.Count;
+            List<Order> orders = restaurant.Orders.Where(o => o.GetStatus() == "Ordered").ToList();
+
+            int maxNum = orders.Count;
 
             Console.WriteLine("Select an order once you are ready to start cooking:");
             for (int i = 0; i < maxNum; i++)
             {
-                Console.WriteLine($"{i + 1}: Order #{restaurant.Orders[i].ID} for {restaurant.Orders[i].Customer.Name}");
+                Console.WriteLine($"{i + 1}: Order #{orders[i].ID} for {orders[i].Customer.Name}");
             }
             Console.WriteLine($"{maxNum + 1}: Return to the previous menu");
-            Console.WriteLine($"Please enter a chioce between 1 and {maxNum + 1}");
+            Console.WriteLine($"Please enter a choice between 1 and {maxNum + 1}:");
 
             int choice;
 
@@ -219,12 +221,12 @@ namespace ArribaEats
 
             if (!(choice == maxNum + 1))
             {
-                Order o = restaurant.Orders[choice - 1];
+                Order o = orders[choice - 1];
                 o.SetStatus("Cooking");
                 Console.WriteLine($"Order #{o.ID} is now marked as cooking. Please prepare the order, then mark it as finished cooking:");
                 foreach (OrderItem oi in o.Items)
                 {
-                    Console.WriteLine($"{oi.Quantity} X {oi.Plate.Name}");
+                    Console.WriteLine($"{oi.Quantity} x {oi.Plate.Name}");
                 }
             }
 
@@ -248,15 +250,18 @@ namespace ArribaEats
 
         public override MenuBase? Show()
         {
-            int maxNum = restaurant.Orders.Count;
+
+            List<Order> orders = restaurant.Orders.Where(o => o.GetStatus() == "Cooking").ToList();
+
+            int maxNum = orders.Count;
 
             Console.WriteLine("Select an order once you have finished preparing it:");
             for (int i = 0; i < maxNum; i++)
             {
-                Console.WriteLine($"{i + 1}: Order #{restaurant.Orders[i].ID} for {restaurant.Orders[i].Customer.Name}");
+                Console.WriteLine($"{i + 1}: Order #{orders[i].ID} for {orders[i].Customer.Name}");
             }
             Console.WriteLine($"{maxNum + 1}: Return to the previous menu");
-            Console.WriteLine($"Please enter a choice between 1 and {maxNum + 1}");
+            Console.WriteLine($"Please enter a choice between 1 and {maxNum + 1}:");
 
             int choice;
 
@@ -267,7 +272,7 @@ namespace ArribaEats
 
             if (!(choice == maxNum + 1))
             {
-                Order o = restaurant.Orders[choice - 1];
+                Order o = orders[choice - 1];
                 o.SetStatus("Cooked");
                 Console.WriteLine($"Order #{o.ID} is now ready for collection.");
                 if (o.Delivery == null)
@@ -315,9 +320,10 @@ namespace ArribaEats
             for (int i = 0; i < maxNum; i++)
             {
                 Order o = assigned[i];
-                Console.WriteLine($"{i + 1}: Order #{o.ID} for {o.Customer.Name} (Deliverer licence plate: {o.Delivery.Licenceplate}) (Order status: {o.GetStatus()})");
+                Console.WriteLine($"{i + 1}: Order #{o.ID} for {o.Customer.Name} (Deliverer license plate: {o.Delivery.Licenceplate}) (Order status: {o.GetStatus()})");
             }
             Console.WriteLine($"{maxNum + 1}: Return to the previous menu");
+            Console.WriteLine($"Please enter a choice between 1 and {maxNum + 1}:");
 
             int choice;
 

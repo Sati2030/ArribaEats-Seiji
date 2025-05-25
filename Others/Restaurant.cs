@@ -6,42 +6,35 @@ namespace ArribaEats
     public class Restaurant
     {
         public string Name { get; private set; }
-        public string Type { get; private set; }
-        public static readonly Dictionary<string, int> TypeMapping = new()
-        {
-            ["Italian"] = 0,
-            ["French"] = 1,
-            ["Chinese"] = 2,
-            ["Japanese"] = 3,
-            ["American"] = 4,
-            ["Australian"] = 5
-        };
+        public CuisineType Cuisine { get; private set; }
         public Location Location { get; private set; }
-        public List<Plate> Menu { get; set; }
-        public double Rating { get; set; }
+        public Carte Menu { get; set; }
+        public double Rating
+        {
+            get
+            {
+                double ra = 0.0;
+                if (Reviews.Count == 0) return ra;
+
+                foreach (Review r in Reviews)
+                {
+                    ra += r.Rating;
+                }
+                return ra / Reviews.Count;
+            }
+        }
         public List<Order> Orders { get; set; }
         public List<Review> Reviews { get; set; }
 
         public Restaurant(string name, string type, Location location)
         {
             this.Name = name;
-            this.Type = type;
+            this.Cuisine = new CuisineType(type);
             this.Location = location;
-            Menu = new List<Plate>();
+            Menu = new Carte();
             Orders = new List<Order>();
-            Rating = 0.0;
             Reviews = new List<Review>();
         }
-
-        public void AddToMenu(Plate plate)
-        {
-            Menu.Add(plate);
-        }
-
-        public int TypeMapper()
-        {
-            return TypeMapping[Type.ToLower()];
-        }
-
+        
     }
 }
