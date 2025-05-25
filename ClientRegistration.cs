@@ -1,55 +1,75 @@
-using Arribaeats;
 using System.Text.RegularExpressions;
 
 namespace ArribaEats
 {
+    /// <summary>
+    /// Menu for registering a client (extends Registrations).
+    /// </summary>
     public class ClientRegistration : Registrations
     {
 
+        /// <summary>
+        /// Clinet specifc registration.
+        /// </summary>
+        /// <param name="name">Name of the client.</param>
+        /// <param name="age">Age of the client.</param>
+        /// <param name="email">Email of the client.</param>
+        /// <param name="mobile">Phone number of the client.</param>
+        /// <param name="password">Password of the client.</param>
         public override void Registration(string name, int age, string email, string mobile, string password)
         {
-            Client client = new Client(name, age, email, mobile, password,"Client");
-
             string restaurantname = RestNameParser();
-            string type = RestTypeParser();
+            CuisineType type = RestTypeParser();
             Location location = LocationParser.Parse();
 
+            ///Creates a new restaurant based on inputs
             Restaurant restaurant = new Restaurant(restaurantname, type, location);
+            ///Adds restaurant to storage of restaurants
             RestaurantStore.Restaurants.Add(restaurant);
-
-            client.RestaurantSetter(restaurant);
-            User = client;
+            ///Assigns restaurant to client
+            Client client = new Client(name, age, email, mobile, password, "Client",restaurant);
+            user = client;
 
             Console.WriteLine($"You have been successfully registered as a client, {name}!");
             return;
 
         }
 
+        /// <summary>
+        /// Parses the name of the restaurant.
+        /// </summary>
+        /// <returns>Name of the restaurant.</returns>
+        /// <exception cref="InvalidInputException">Thrown if is blank or empty.</exception>
         public string RestNameParser()
         {
             while (true)
             {
                 Console.WriteLine("Please enter your restaurant's name:");
-                string input = Console.ReadLine();
+                string? input = Console.ReadLine();
 
                 try
                 {
-                    if (!Regex.IsMatch(input, @"\S"))
+                    ///Check if it has at least one non-whitespace character
+                    if (!Regex.IsMatch(input!, @"\S"))
                     {
                         throw new InvalidInputException("Invalid restaurant name.");
                     }
 
-                    return input;
+                    return input!;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Invalid restaurant name.");
                 }
 
             }
         }
 
-        public string RestTypeParser()
+        /// <summary>
+        /// Parses the type of the restaurant.
+        /// </summary>
+        /// <returns>The restaurant type.</returns>
+        public CuisineType RestTypeParser()
         {
             while (true)
             {
@@ -66,15 +86,7 @@ namespace ArribaEats
 
                 if (InputParser(6, out choice))
                 {
-                    return choice switch
-                    {
-                        1 => "Italian",
-                        2 => "French",
-                        3 => "Chinese",
-                        4 => "Japanese",
-                        5 => "American",
-                        6 => "Australian"
-                    };
+                    return (CuisineType)choice-1;
                 }
             }
 
